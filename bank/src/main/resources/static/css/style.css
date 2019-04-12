@@ -1,0 +1,67 @@
+.header {
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 200%;
+      color: #333;
+      margin-top: 30px;
+    }
+    .header p {
+      font-size: 14px;
+    }
+    .login-content{
+    	    width: 500px;
+			    padding: 40px 40px 25px;
+			    background-color: #fff;
+			    border-radius: 4px;
+			    margin:10% auto 0;
+    }
+    .login-title {
+    	color: #697882;
+		}
+		.login-title {
+		    width: 100%;
+		    font-size: 24px;
+		}
+		.login-content-info {
+    color: #B3B3B3;
+    font-size: 14px;
+		}
+		
+		.form-line-form, .form-border-form {
+   		 padding-top: 20px;
+		}
+		
+		.form-line-form input[type=number], .form-line-form input[type=search], .form-line-form input[type=text], .form-line-form input[type=password], 
+		.form-line-form input[type=datetime], .form-line-form input[type=datetime-local], 
+		.form-line-form input[type=date], .form-line-form input[type=month], .form-line-form input[type=time], .form-line-form input[type=week], 
+		.form-line-form input[type=email], .form-line-form input[type=url], .form-line-form input[type=tel], .form-line-form input[type=color], 
+		.form-line-form select, .form-line-form textarea,  .am-form-field {
+    display: block;
+    width: 100%;
+    padding: 6px 12px;
+    line-height: 1.42857;
+    color: #4d6b8a;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #c2cad8;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    background: 0 0;
+    border: 0;
+    border-bottom: 1px solid #c2cad8;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+    color: #555;
+    box-shadow: none;
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 14px;
+}

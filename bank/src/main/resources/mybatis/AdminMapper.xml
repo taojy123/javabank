@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="pro.bank.mapper.AdminMapper" >
+  <resultMap id="BaseResultMap" type="pro.bank.entity.Admin" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+   		 <result column="id" property="id" jdbcType="BIGINT" />
+   		 <result column="user_name" property="userName" jdbcType="VARCHAR" />
+   		 <result column="password" property="password" jdbcType="VARCHAR" />
+   		 <result column="real_name" property="realName" jdbcType="VARCHAR" />
+   		 <result column="is_block" property="isBlock" jdbcType="VARCHAR" />
+   		 <result column="user_type" property="userType" jdbcType="VARCHAR" />
+   		 <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  
+<select id="findAll" resultMap="BaseResultMap" >
+   	SELECT * FROM t_sys_admin
+    WHERE 1=1  
+    <if test="searchVal != null and searchVal != ''">
+    	AND (
+	 	user_name LIKE  CONCAT('%',#{searchVal},'%')
+    	 )
+    </if>
+    
+  </select>
+  
+  	<select id="count" resultType="java.lang.Integer">
+			SELECT count(*) FROM t_sys_admin
+    WHERE 1=1 
+    <if test="searchVal != null and searchVal != ''">
+    	AND (
+	 	user_name LIKE  CONCAT('%',#{searchVal},'%')
+    	 )
+    </if>
+	</select>
+	
+	
+	 <select id="findByUserName" resultMap="BaseResultMap">
+    SELECT * FROM t_sys_admin where user_name = #{userName}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    SELECT * FROM t_sys_admin
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    SELECT * FROM t_sys_admin
+    WHERE id = #{id}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" >
+    DELETE FROM t_sys_admin
+    WHERE id = #{id}
+  </delete>
+  
+  <delete id="batchDelete">
+		delete from t_sys_admin where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+  
+  <insert id="insert" parameterType="pro.bank.entity.Admin" useGeneratedKeys="true" keyProperty="id">
+    insert into t_sys_admin ( id,user_name,password,real_name,is_block,user_type,create_time )
+    values ( id,userName,password,realName,isBlock,userType,createTime)
+  </insert>
+  
+  
+  <insert id="insertSelective" parameterType="pro.bank.entity.Admin" useGeneratedKeys="true" keyProperty="id">
+    insert into t_sys_admin
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="realName != null" >
+        real_name,
+      </if>
+      <if test="isBlock != null" >
+        is_block,
+      </if>
+      <if test="userType != null" >
+        user_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="userName != null" >
+        #{userName},
+      </if>
+      <if test="password != null" >
+        #{password},
+      </if>
+      <if test="realName != null" >
+        #{realName},
+      </if>
+      <if test="isBlock != null" >
+        #{isBlock},
+      </if>
+      <if test="userType != null" >
+        #{userType},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterType="pro.bank.entity.Admin" >
+    update t_sys_admin
+    <set >
+      <if test="id != null" >
+        id = #{id},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName},
+      </if>
+      <if test="password != null" >
+        password = #{password},
+      </if>
+      <if test="realName != null" >
+        real_name = #{realName},
+      </if>
+      <if test="isBlock != null" >
+        is_block = #{isBlock},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  
+  
+  <update id="updateByPrimaryKey" parameterType="pro.bank.entity.Admin" >
+    update t_sys_admin
+    set 
+        id = #{id},
+        user_name = #{userName},
+        password = #{password},
+        real_name = #{realName},
+        is_block = #{isBlock},
+        user_type = #{userType},
+        create_time = #{createTime}
+  </update>
+</mapper>

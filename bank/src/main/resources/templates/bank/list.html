@@ -1,0 +1,207 @@
+<#assign ctx=request.contextPath />
+<#include "/layout/layout.html"/>
+<#include "/layout/body.html"/>
+<#include "/layout/message.html"/>
+<@htmlHead></@htmlHead>
+<body data-type="index" class="theme-white" >
+	<div class="am-g tpl-g">
+		<!-- 头部 -->
+		<@header></@header>
+		<!-- 风格切换 -->
+		<@skiner></@skiner>
+		<!-- 侧边导航栏 -->
+		<@sidebar type="bank"></@sidebar>
+
+		<!-- 内容区域 -->
+		<div class="tpl-content-wrapper">
+
+
+			<div class="row-content am-cf">
+
+				<div class="row am-cf"  >
+					<div class="row">
+						<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+							<div class="widget am-cf"  >
+								<div class="widget-head am-cf">
+	                                <div class="widget-title  am-cf">银行列表</div>
+	                            </div>
+								<div class="widget-body  am-fr" >
+
+									<div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+								
+										<div class="am-form-group">
+											<div class="am-btn-toolbar">
+												<div class="am-btn-group am-btn-group-xs">
+													<button type="button"
+														class="am-btn am-btn-default am-btn-success create_btn" >
+														<span class="am-icon-plus"></span> 新建
+													</button>
+												<form id="form" style="float:left;" action="${ctx}/bank/import" method="post" enctype="multipart/form-data">
+												<input type="file"
+							style="display: none;" id="uploadFile" name="uploadFile" />
+													<button style="    position: relative;
+    top: -1px;"type="button" class="am-btn am-btn-default am-btn-success am-btn-xs data"  >
+														<span class="am-icon-plus"></span> 导入银行
+													</button>
+												</from>
+												</div>
+											</div>
+										</div>
+										
+									</div>
+									<form action="${ctx}/bank/list" method="GET">
+
+									<div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
+									
+										<div
+											class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+											<input type="text" class="am-form-field " value="${searchVal}"
+												placeholder="根据银行名称,上级ID查询..." name="searchVal"> <span
+												class="am-input-group-btn">
+												<button
+													class="am-btn  am-btn-default am-btn-success tpl-table-list-field"
+													type="submit">搜索</button>
+												<button
+													class="am-btn  am-btn-default am-btn-warning tpl-table-list-field"
+													type="button" onclick="window.location.href='${ctx}/bank/list'">重置</button>
+											</span>
+										</div>
+									</div>
+								</form>
+									<div class="am-u-sm-12" >
+										<table width="100%"
+											class="am-table am-table-bordered am-table-radius am-table-striped"
+											>
+											<thead>
+												<tr>
+													<th>序号</th>
+													<th>银行名称</th>
+													<th>银行等级</th>
+													<th>创建时间</th>
+													<th>操作</th>
+												</tr>
+											</thead>
+											<tbody>
+												<#list bankPage.list as bank>
+												<tr class="gradeX even">
+													<td>${bank_index+1}</td>
+													
+													<td>
+													${bank.name!'暂无数据'}
+													</td>
+													
+													<td>
+													一级支行
+													</td>
+													
+													<td>
+													${(bank.createTime?string("yyyy-MM-dd HH:mm:ss"))!}
+													</td>
+													
+													<td>
+														<div class="tpl-table-black-operation">
+															<a href="javascript:void(0);"  class="view" data-id = "${bank.id}" data-name="${bank.name}"> <i class="am-icon-eye"></i>
+																查看下级银行
+															</a>
+															<a href="javascript:void(0);"  class="update_btn" data-id = "${bank.id}"> <i class="am-icon-pencil"></i>
+																编辑
+															</a>
+															 <a href="javascript:;" bankId="${bank.id}"
+																class="tpl-table-black-operation-del"> <i
+																class="am-icon-trash"></i> 删除
+															</a>
+														</div>
+													</td>
+												</tr>
+												</#list>
+												<#if bankPage.total == 0>
+												<tr class="gradeX even">
+													<td colspan="5" style="text-align: center;">暂无更多数据</td>
+												</tr>
+												</#if>
+												<!-- more data -->
+											</tbody>
+										</table>
+									</div>
+									<@pageContent pageInfo=bankPage url="${ctx}/bank/list?searchVal=${searchVal}"  searchType=true> </@pageContent>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+
+	<@htmlJs>
+	<script>
+		$(function() {
+			$(".data,.tz").click(function() {
+				$("#uploadFile").click();
+			});
+
+			$("#uploadFile").change(function() {
+				$("#form").ajaxSubmit(function(result) {
+					$("body").alertModal("系统提示", result.resultDesc,function(){
+						if(result.result)
+							window.location.reload();
+					});
+				})
+			});
+			
+			$(".tpl-table-black-operation-del").click(function(){
+				 var _this = $(this);
+				 $("body").confirmModal("系统提示",'您确定要删除该银行吗?',function(){
+				 	 $.post("${ctx}/bank/delete/"+_this.attr("bankId"),function(e){
+				 	 	$("body").alertModal("系统提示",e.resultDesc);
+				 	 },"json");
+					 _this.parent().parent().parent().remove();
+		     	 });
+			});
+			$(".view").click(function(){
+				var _name = $(this).attr("data-name");
+				layer.open({
+					  type: 2,
+					  title: _name+"的下级银行列表",
+					  area: ['80%', '80%'],
+					  shadeClose: true,
+				      maxmin: true,
+					  content: ["${ctx}/bank/list?parentId="+$(this).attr("data-id")], //iframe的url，no代表不显示滚动条
+					  end: function(){ 
+					  }
+				});
+			});
+			$(".create_btn").click(function(){
+				var parentId = "${parentId}";
+				layer.open({
+					  type: 2,
+					  title: "新建",
+					  area: ['500px', '500px'],
+					  shadeClose: true,
+					  content: ["${ctx}/bank/create?parentId="+parentId], //iframe的url，no代表不显示滚动条
+				});
+			});
+			$(".update_btn").click(function(){
+				layer.open({
+					  type: 2,
+					  title: "编辑",
+					  area: ['500px', '500px'],
+					  shadeClose: true,
+					  content: ["${ctx}/bank/update/"+$(this).attr("data-id")], //iframe的url，no代表不显示滚动条
+				});
+			});
+		});
+		function success(){
+			$("body").alertModal("系统提示","操作成功",function(){
+				window.location.reload();
+			});
+		}
+		</script>
+	</@htmlJs>
+</body>
+
+</html>

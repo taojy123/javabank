@@ -1,0 +1,84 @@
+<#assign ctx=request.contextPath /> <#include "/layout/layout.html"/>
+<#include "/layout/body.html"/> <#include "/layout/message.html"/>
+<@htmlHead> </@htmlHead>
+<body data-type="index" class="theme-white" style="background: #fff;">
+	<div class="am-g tpl-g">
+
+
+		<div class="row-content am-cf">
+
+			<div class="row am-cf">
+				<div class="row">
+					<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+						<div class="widget am-cf" style="padding: 0px;">
+							<div class="widget-body  am-fr" style="padding: 0px;">
+								<form class="am-form tpl-form-line-form" method="POST"
+									id="create-form" style="width: 90%;"
+									action="${ctx}/admin/update">
+									<input type="hidden" value="${admin.id}" name="id"/>
+									<div class="am-form-group">
+										<label for="user-name" class="am-u-sm-3 am-form-label">用户名
+
+										</label>
+										<div class="am-u-sm-9">
+											<input type="text" class="tpl-form-input" name="userName" value="${admin.userName}"
+												placeholder="请输入用户名">
+										</div>
+									</div>
+									<div class="am-form-group">
+										<label for="user-name" class="am-u-sm-3 am-form-label">登录密码
+
+										</label>
+										<div class="am-u-sm-9">
+											<input type="password" class="tpl-form-input" name="password"  value="${admin.password}"
+												placeholder="请输入登录密码">
+										</div>
+									</div>
+									<div class="am-form-group">
+										<label for="user-name" class="am-u-sm-3 am-form-label">真实姓名
+
+										</label>
+										<div class="am-u-sm-9">
+											<input type="text" class="tpl-form-input" name="realName"  value="${admin.realName}"
+												placeholder="请输入真实姓名">
+										</div>
+									</div>
+									<div class="am-form-group"
+										style="position: fixed; bottom: 0px; width: 100%; left: 0px; text-align: center; background-color: #fff; border-top: 1px solid #eee; padding-top: 20px;">
+										<div class="am-u-sm-12">
+											<button type="button" class="am-btn am-btn-primary am-btn-sm"
+												onclick="create_submit()">提交保存</button>
+											<button type="button" class="am-btn am-btn-primary am-btn-sm"
+												onclick="parent.layer.close(parent.layer.getFrameIndex(window.name));">放弃保存</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+
+
+
+	<@htmlJs>
+	<script>
+		function create_submit(){
+			$("#create-form").ajaxSubmit(function(data){
+				if(data.result){
+					parent.layer.close(parent.layer.getFrameIndex(window.name))
+					parent.success();
+				}else{
+					$("body").alertModal("系统提示",data.resultDesc);
+				}
+			},"json");
+		}
+		</script>
+	</@htmlJs>
+</body>
+
+</html>

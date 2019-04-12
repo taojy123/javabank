@@ -1,0 +1,236 @@
+<#assign ctx=request.contextPath />
+<#macro htmlHead> <!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>理财统计系统</title>
+<meta name="description" content="这是一个 index 页面">
+<meta name="keywords" content="index">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<script src="${ctx}/js/echarts.min.js"></script>
+<link rel="stylesheet" href="${ctx}/css/amazeui.min.css" />
+<link rel="stylesheet" href="${ctx}/css/amazeui.datatables.min.css" />
+<link rel="stylesheet" href="${ctx}/css/app.css">
+<script src="${ctx}/js/jquery.min.js"></script>
+<link rel="stylesheet" href="${ctx}/css/amazeui.datetimepicker.css"/>
+<script src="${ctx}/js/amazeui.datetimepicker.min.js"></script>
+<!--[if (gte IE 9)|!(IE)]><!--> 
+<script type="text/javascript" src="${ctx}/js/jquery-form.js"></script>
+ <!--<![endif]-->
+ <script src="${ctx}/js/layer.js"></script>
+<script src="${ctx}/js/amazeui.min.js"></script> <script
+	src="${ctx}/js/amazeui.datatables.min.js"></script> <script
+	src="${ctx}/js/dataTables.responsive.min.js"></script>
+<style>
+.current ul {
+	display: block;
+}
+/* .am-selected {
+    width: auto;
+} */
+
+.sidebar-nav-link-logo{width: 5px;}
+input[type="number"]{-moz-appearance:textfield;}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+}
+table td .switch {
+	    width: 50px;
+    height: 25px;
+    background: #e5e5e5;
+    z-index: 0;
+    margin: 0;
+    padding: 0;
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    border-radius: 16px;
+    -moz-border-radius: 16px;
+    -webkit-border-radius: 16px;
+}
+
+table td .switch:before {
+	content: ' ';
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    width: 48px;
+    height: 23px;
+    background: #fff;
+    z-index: 1;
+    border-radius: 16px;
+    -moz-border-radius: 16px;
+    -webkit-border-radius: 16px;
+}
+
+table td .switch:after {
+	    content: ' ';
+    height: 22px;
+    width: 25px;
+    border-radius: 28px;
+    background: #fff;
+    position: absolute;
+    z-index: 2;
+    top: 1px;
+    left: 1px;
+    -webkit-transition-duration: 300ms;
+    transition-duration: 300ms;
+    -webkit-box-shadow: 0 2px 5px #999999;
+    box-shadow: 0 2px 5px #999999;
+}
+
+table td .switchOn, table td .switchOn:before {
+	background: #4cd964 !important;
+}
+
+table td .switchOn:after {
+	    left: 24px !important;
+}
+
+table td .switchBig {
+	width: 200px;
+	height: 105px;
+	background: #e5e5e5;
+	z-index: 0;
+	margin: 0;
+	padding: 0;
+	appearance: none;
+	border: none;
+	cursor: pointer;
+	position: relative;
+	border-radius: 53px;
+	-moz-border-radius: 53px;
+	-webkit-border-radius: 53px;
+}
+
+table td .switchBig:before {
+	content: ' ';
+	position: absolute;
+	left: 2px;
+	top: 2px;
+	width: 196px;
+	height: 101px;
+	background: #fff;
+	z-index: 1;
+	border-radius: 52px;
+	-moz-border-radius: 52px;
+	-webkit-border-radius: 52px;
+}
+
+table td .switchBig:after {
+	content: ' ';
+	height: 100px;
+	width: 100px;
+	border-radius: 52px;
+	background: #fff;
+	position: absolute;
+	z-index: 2;
+	top: 2px;
+	left: 2px;
+	-webkit-transition-duration: 300ms;
+	transition-duration: 300ms;
+	-webkit-box-shadow: 0 2px 5px #999999;
+	box-shadow: 0 2px 5px #999999;
+}
+/* table th{
+
+    font-weight: normal;
+    background-color: #f2f2f2;
+    font-size:14px;
+}
+ */
+table td .switchBigOn, table td .switchBigOn:before {
+	background: #4cd964 !important;
+}
+
+table td .switchBigOn:after {
+	left: 98px !important;
+}
+/* .am-table>tbody>tr>td{
+border-color: #e6e6e6;
+font-size:14px;
+} */
+</style>
+<#nested>
+</head>
+<!--[if lte IE 9]>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
+  以获得更好的体验！</p>
+<![endif]-->
+</#macro>
+<#macro htmlJs> <!--[if lt IE 9]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="js/amazeui.ie8polyfill.min.js"></script>
+<![endif]--> 
+
+ <script src="${ctx}/js/utils.js"></script>
+ <script src="${ctx}/js/layer.js"></script> 
+<script>
+$(function(){
+	var path = "${ctx}";
+		$('table td .switch').click(function(){
+			$(this).toggleClass("switchOn");
+		});
+	//左侧菜单
+	$(".am-icon-refresh").parent().click(function(){
+		window.location.reload();
+	});
+	 $(document).keyup(function(event){  
+		  if(event.keyCode ==13){  
+		    $("button:contains('提交保存')").click();
+		    $("button:contains('立即登录')").click();
+		    $("button:contains('立即注册')").click();
+		  }  
+		}); 
+	 $("button:contains('提交保存')").click(function(){
+		 $(this).attr("disabled","disabled");
+		 $(this).text("操作中...");
+	 });
+	$('.tpl-header-switch-button').on('click', function() {
+        if ($('.left-sidebar').is('.active')) {
+            if ($(window).width() > 1024) {
+                $('.tpl-content-wrapper').removeClass('active');
+            }
+            $('.left-sidebar').removeClass('active');
+        } else {
+
+            $('.left-sidebar').addClass('active');
+            if ($(window).width() > 1024) {
+                $('.tpl-content-wrapper').addClass('active');
+            }
+        }
+    })
+
+    if ($(window).width() < 1024) {
+        $('.left-sidebar').addClass('active');
+    } else {
+        $('.left-sidebar').removeClass('active');
+    }
+	// 侧边菜单
+	$('.sidebar-nav-sub-title').on('click', function() {
+	    $(this).siblings('.sidebar-nav-sub').slideToggle(80)
+	        .end()
+	        .find('.sidebar-nav-sub-ico').toggleClass('sidebar-nav-sub-ico-rotate');
+	})
+	$('.datetimepickers').datetimepicker({
+				  format: 'yyyy-mm-dd hh:ii',
+				  language:  'zh-CN'
+			});
+	//侧边菜单自动绑定父级展开
+	$(".sidebar-nav .sidebar-nav-link:gt(0) a.active").parent().parent().parent().addClass("current");
+    $(".current .sidebar-nav-sub-title span").attr("class","am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico sidebar-nav-sub-ico-rotate");
+    var result = isIE()
+    if(result)
+		$("#popup").attr("style"," z-index: 9999;width: 80%;background-color: rgb(233, 236, 243);height: 529.6px; display: none; margin-left: 10%;");
+});
+function isIE(){
+	if (window.navigator.userAgent.indexOf("MSIE")>=1) 
+	return true; 
+	else
+	return false; 
+	}
+</script> <#nested></#macro>

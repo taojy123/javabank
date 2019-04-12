@@ -1,0 +1,92 @@
+<#assign ctx=request.contextPath />
+<#include "/layout/layout.html"/>
+<#include "/layout/body.html"/>
+<#include "/layout/message.html"/>
+<@htmlHead>
+<script>
+if (window.frames.length != parent.frames.length) {
+	　parent.window.location.reload();
+}
+</script>
+</@htmlHead>
+<body data-type="preview" class="theme-white"  style="background: #16a085;overflow: hidden;">
+	<div class="particleground-div" >
+	</div>
+	 <div class="tpl-login" style="height:100%;position: absolute;top:0%;">
+            <div class="tpl-login-content" style="width:500px;">
+               <div style="text-align: center;"> 
+               	<span style="font-size:25px;color:#16a085;font-weight: 800;">理财统计系统</span>
+               </div>
+               <br/>
+              <div class="tpl-login-title"></div>
+			<form  class="am-form tpl-form-line-form " id="loginForm" data-am-validator
+				action="${ctx}/login" method="POST">
+				<fieldset style="padding: 0px;">
+					<div class="am-form-group">
+						<input type="text" class="tpl-form-input" 
+							minLength="5" maxlength="20" name="userName"
+							placeholder="请输入用户名（5~20位）">
+					</div>
+					<div class="am-form-group">
+						<input type="password" class="tpl-form-input" 
+							minLength="6" maxlength="20" name="password"
+							placeholder="请输入密码（6~20位）">
+					</div>
+					<div class="am-form-group">
+						<input type="text" class="tpl-form-input"
+							minLength="4" maxlength="4" name="captcha" style="width: 70%;float: left;"
+							placeholder="请输入图形验证码">
+						<img id="img_captcha" onclick="javascript:refreshCaptcha();" style="cursor: pointer;width: 30%;position: relative;top:-5px;" height="35" 
+						src="${ctx}/captcha_login" />
+					</div>
+					
+					
+
+					<div class="am-form-group">
+						<button type="button"
+							class="am-btn am-btn-primary  am-btn-block tpl-btn-bg-color-success  tpl-login-btn" style="background: #16a085;border:#16a085;" onclick="login();">立即登录</button>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+	<@htmlJs>
+	<script type="text/javascript" src="${ctx}/js/Particleground.js"></script>
+	<script>
+	$(function(){
+		$(".particleground-div").css("height",$(window).height())
+		 //粒子背景特效
+	    $('body').particleground({
+	    	dotColor:'#5cbdaa',lineColor:'#5cbdaa'
+	    });
+		
+	});
+		var userName = localStorage.getItem("userName");
+		if(userName != null){
+			$("input[name='userName']").val(userName);
+		}
+		$(".tpl-login-btn").click(function(){
+			var name = $("input[name='userName']").val();
+			localStorage.setItem("userName",name);
+		});
+		function login(){
+			$("#loginForm").ajaxSubmit(function(data){
+				if(data.result){
+					window.location.href="${ctx}/"
+				}else{
+					$("body").alertModal("系统提示",data.resultDesc);
+				}
+			},"json");
+		}
+		function refreshCaptcha() {
+			var $img_captcha = $("#img_captcha");
+			var _captcha_src = $img_captcha.attr("src");
+			$img_captcha.attr("src", _captcha_src+"?t=" + Math.random());
+		}
+
+		
+	</script>
+	</@htmlJs>
+</body>
+
+</html>

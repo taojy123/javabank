@@ -1,0 +1,30 @@
+<#macro user_isBlock value >
+	<#if value == 'NO'>
+		<span class="">正常</span>
+	<#elseif value == 'YES'>
+		<span class="">锁定</span>
+	</#if>
+</#macro>
+<#macro user_sex value >
+	<#if value == 'MAN'>
+		<span class="">男</span>
+	<#elseif value == 'FEMALE'>
+		<span class="">女</span>
+	</#if>
+</#macro>
+<#macro user_type value >
+	<#if value == 'CSR'>
+		<span class="">项目创始人</span>
+	<#elseif value == 'HHR'>
+		<span class="">合伙人</span>
+	</#if>
+</#macro>
+<#macro user_isInfo value >
+	<#if value == 'NO'>
+		<span class="">未完善</span>
+	<#elseif value == 'YES'>
+		<span class="">已完善</span>
+	</#if>
+</#macro>
+
+

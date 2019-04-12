@@ -1,0 +1,31 @@
+1、项目结构
+	annotation 自定义注解 主要用于controller层获取当前登录对象 已入参方式注入
+	common 一些公共的类
+	config 配置类 - xml bean
+	constant 枚举类
+	entity 实体类-对应数据模型
+	excetion 自定义异常类
+	handler 拦截器 - 目前只有异常拦截器
+	mapper 也就是dao
+	security 对应shiro
+	service service层
+	utils 工具包
+	viewresolver json视图解析类
+	web controller层
+		vo VO对象
+		controller 
+		editor 类转换器 如时间类型 只能接收string 通过类转换器可以转换并绑定到date类型上 固可以在controller中用date接收擦书
+	application 启动类
+2、资源结构
+	mybatis  xmls
+	static 静态文件 如css image
+	templates htmls
+	application.properties 主要用于boot集成的相关框架的配置中心  数据源等信息全部在这里
+	logback 日志配置
+3、环境所需
+	需要jdk1.8+
+	mysql 5.6+
+	apache 7.0+
+	maven项目构建 打包命令 mvn clean package或者maven build 打包
+	
+	 

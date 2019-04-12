@@ -1,0 +1,88 @@
+<#macro header> <header>
+
+	<!-- logo -->
+	<div class="am-fl tpl-header-logo">
+		<a style="color: rgb(22, 160, 133); font-size: 17px; font-weight: 500;"><span>理财统计</span>系统</a>
+	</div>
+	<!-- 右侧内容 -->
+	<div class="tpl-header-fluid">
+		<!-- 侧边切换 -->
+		<div class="am-fl tpl-header-switch-button am-icon-list">
+			<span> </span>
+		</div>
+		<!-- 其它功能-->
+		<div class="am-fr tpl-header-navbar">
+			<ul>
+				<!-- 欢迎语 -->
+			<!-- 	<li class="am-text-sm tpl-header-navbar-welcome"><a
+					href="javascript:;">欢迎你, <span>${loginUser.userName}</span>
+				</a></li> -->
+
+
+				<!-- 退出 -->
+				<!-- <li class="am-text-sm"><a
+					href="${ctx}/logout"> <span
+						class="am-icon-sign-out"></span> 退出
+				</a></li> -->
+			</ul>
+		</div>
+	</div>
+
+</header> </#macro>
+<#macro skiner> <!--  <div class="tpl-skiner">
+	<div class="tpl-skiner-toggle am-icon-cog"></div>
+	<div class="tpl-skiner-content">
+		<div class="tpl-skiner-content-title">选择主题</div>
+		<div class="tpl-skiner-content-bar">
+			<span class="skiner-color skiner-white" data-color="theme-white"></span>
+			<span class="skiner-color skiner-black" data-color="theme-black"></span>
+		</div>
+	</div>
+</div> --> </#macro>
+<#macro sidebar type>
+<div class="left-sidebar" >
+	<!-- 菜单 -->
+	<ul class="sidebar-nav">
+		<li class="sidebar-nav-heading">系统菜单 </li>
+		<li class="sidebar-nav-link"><a href="${ctx}/count"<#if type=="count">class="active"</#if>><span class="am-icon-angle-right sidebar-nav-link-logo"></span> 统计</a></li>
+		<li class="sidebar-nav-link"><a href="${ctx}/bank/list"<#if type=="bank">class="active"</#if>><span class="am-icon-angle-right sidebar-nav-link-logo"></span> 银行</a></li>
+		<!-- <li class="sidebar-nav-link"><a href="${ctx}/admin/list"<#if type=="admin">class="active"</#if>><span class="am-icon-angle-right sidebar-nav-link-logo"></span> 账号 </a></li> -->
+	</ul>
+</div>
+</#macro> 
+<#macro pageContent pageInfo url searchType>
+<div class="am-cf">
+	<div class="am-fr">
+		<ul class="am-pagination tpl-pagination" style="font-size:13px;">
+			<#if !pageInfo.hasPreviousPage>
+				<li class="am-disabled">
+					<a href="#" style="background: #8A8484;color:#fff;">上一页</a>
+				</li>
+			<#else>
+				<li>
+				<#if searchType> 
+			    	<a href="${url}&page=${pageInfo.prePage}">上一页</a>
+			     <#else>
+			     	<a href="${url}?page=${pageInfo.prePage}">上一页</a>
+			    </#if>
+			    </li>
+			</#if>
+			<li class="am-active"><a >第 <#if pageInfo.pageNum==0>1<#else>${pageInfo.pageNum}</#if> 页</a></li>
+			<#if pageInfo.isLastPage>
+				<li class="am-disabled">
+					<a href="#" style="background: #8A8484;color:#fff;">下一页</a>
+				</li>
+			<#else>
+				<li>
+				<#if searchType> 
+			    	<a href="${url}&page=${pageInfo.nextPage}">下一页</a>
+			     <#else>
+			     	<a href="${url}?page=${pageInfo.nextPage}">下一页</a>
+			    </#if>
+			    </li>
+			</#if>
+		    
+		</ul>
+	</div>
+</div>
+</#macro>

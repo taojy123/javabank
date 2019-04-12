@@ -1,0 +1,169 @@
+<#assign ctx=request.contextPath />
+<#include "/layout/layout.html"/>
+<#include "/layout/body.html"/>
+<#include "/layout/message.html"/>
+<@htmlHead></@htmlHead>
+<body data-type="index" class="theme-white" >
+	<div class="am-g tpl-g">
+		<!-- 头部 -->
+		<@header></@header>
+		<!-- 风格切换 -->
+		<@skiner></@skiner>
+		<!-- 侧边导航栏 -->
+		<@sidebar type="admin"></@sidebar>
+
+		<!-- 内容区域 -->
+		<div class="tpl-content-wrapper">
+
+
+			<div class="row-content am-cf">
+
+				<div class="row am-cf"  >
+					<div class="row">
+						<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+							<div class="widget am-cf"  >
+								<div class="widget-head am-cf">
+	                                <div class="widget-title  am-cf">系统用户列表</div>
+	                            </div>
+								<div class="widget-body  am-fr" >
+
+									<div class="am-u-sm-12 am-u-md-6 am-u-lg-2">
+								
+										<div class="am-form-group">
+											<div class="am-btn-toolbar">
+												<div class="am-btn-group am-btn-group-xs">
+													<button type="button" class="am-btn am-btn-default am-btn-success create_btn" >
+														<span class="am-icon-plus"></span> 新建
+													</button>
+												</div>
+											</div>
+										</div>
+										
+									</div>
+									<form action="${ctx}/admin/list" method="GET">
+									<div class="am-u-sm-12 am-u-md-6 am-u-lg-5">
+									</div>
+
+									<div class="am-u-sm-12 am-u-md-12 am-u-lg-5">
+									
+										<div
+											class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+											<input type="text" class="am-form-field " value="${searchVal}"
+												placeholder="根据用户名查询..." name="searchVal"> <span
+												class="am-input-group-btn">
+												<button
+													class="am-btn  am-btn-default am-btn-success tpl-table-list-field"
+													type="submit">搜索</button>
+												<button
+													class="am-btn  am-btn-default am-btn-warning tpl-table-list-field"
+													type="button" onclick="window.location.href='${ctx}/admin/list'">重置</button>
+											</span>
+										</div>
+									</div>
+								</form>
+									<div class="am-u-sm-12" >
+										<table width="100%"
+											class="am-table am-table-bordered am-table-radius am-table-striped"
+											>
+											<thead>
+												<tr>
+													<th>序号</th>
+													<th>用户名</th>
+													<th>真实姓名</th>
+													<th>创建时间</th>
+													<th>操作</th>
+												</tr>
+											</thead>
+											<tbody>
+												<#list adminPage.list as admin>
+												<tr class="gradeX even">
+													<td>${admin_index+1}</td>
+													<td>
+													${admin.userName!'暂无数据'}
+													</td>
+													<td>
+													${admin.realName!'暂无数据'}
+													</td>
+													<td>
+													${(admin.createTime?string("yyyy-MM-dd HH:mm:ss"))!}
+													</td>
+													
+													<td>
+														<div class="tpl-table-black-operation">
+															<a href="javascript:void(0);" class="update_btn" data-id = "${admin.id}"> <i class="am-icon-pencil"></i>
+																编辑
+															</a>
+															 <a href="javascript:;" adminId="${admin.id}"
+																class="tpl-table-black-operation-del"> <i
+																class="am-icon-trash"></i> 删除
+															</a>
+														</div>
+													</td>
+												</tr>
+												</#list>
+												<#if adminPage.total == 0>
+												<tr class="gradeX even">
+													<td colspan="5" style="text-align: center;">暂无更多数据</td>
+												</tr>
+												</#if>
+												<!-- more data -->
+											</tbody>
+										</table>
+									</div>
+									<@pageContent pageInfo=adminPage url="${ctx}/admin/list?searchVal=${searchVal}"  searchType=true> </@pageContent>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+
+	<@htmlJs>
+	<script>
+		$(function() {
+			$(".tpl-table-black-operation-del").click(function(){
+				 var _this = $(this);
+				 $("body").confirmModal("系统提示",'您确定要删除该用户吗?',function(){
+				 	 $.post("${ctx}/admin/delete/"+_this.attr("adminId"),function(e){
+				 	 	$("body").alertModal("系统提示",e.resultDesc);
+				 	 },"json");
+					 _this.parent().parent().parent().remove();
+		     	 });
+			});
+			
+			$(".create_btn").click(function(){
+				layer.open({
+					  type: 2,
+					  title: "新建",
+					  area: ['500px', '500px'],
+					  shadeClose: true,
+					  content: ["${ctx}/admin/create"], //iframe的url，no代表不显示滚动条
+				});
+			});
+			$(".update_btn").click(function(){
+				layer.open({
+					  type: 2,
+					  title: "编辑",
+					  area: ['500px', '500px'],
+					  shadeClose: true,
+					  content: ["${ctx}/admin/update/"+$(this).attr("data-id")], //iframe的url，no代表不显示滚动条
+				});
+			});
+		});
+		function success(){
+			$("body").alertModal("系统提示","操作成功",function(){
+				window.location.reload();
+			});
+		}
+		
+		</script>
+	</@htmlJs>
+</body>
+
+</html>

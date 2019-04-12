@@ -1,0 +1,390 @@
+<#assign ctx=request.contextPath />
+<#include "/layout/layout.html"/>
+<#include "/layout/body.html"/>
+<#include "/layout/message.html"/>
+<@htmlHead>
+
+<style>
+
+  input::-webkit-input-placeholder {
+         color: #fff;
+    }
+</style>
+</@htmlHead>
+<body data-type="index" class="theme-white">
+	<div class="am-g tpl-g">
+		<!-- 头部 -->
+		<@header></@header>
+		<!-- 风格切换 -->
+		<@skiner></@skiner>
+		<!-- 侧边导航栏 -->
+		<@sidebar type="count"></@sidebar>
+
+		<!-- 内容区域 -->
+		<div class="tpl-content-wrapper">
+
+
+			<div class="row-content am-cf">
+				<div style="text-align: center; padding: 20px;">
+
+					<form id="form" action="${ctx}/count/improtExcel" method="post"
+						enctype="multipart/form-data">
+						<input type="hidden" value="0" id="uploadFileType"
+							name="uploadFileType"> <input type="file"
+							style="display: none;" id="uploadFile" name="uploadFile" />
+						<button type="button" uploadFileType="0"
+							class="am-btn am-btn-default am-btn-success tz">导入台账数据</button>
+						<button type="button" uploadFileType="1"
+							class="am-btn am-btn-default am-btn-success data">
+							导入基础数据</button>
+						</from>
+						<br /> <br />
+						<div style="width: 500px; margin: 0 auto;">
+							<div class="am-alert am-alert-danger" id="my-alert"
+								style="display: none">
+								<p>开始日期应小于结束日期！</p>
+							</div>
+							<div class="am-g">
+								<div class="am-u-sm-6" style="text-align: right;padding: 0px;">
+									<input class="am-btn am-btn-default am-margin-right" style=" margin: 0px;width:130px;margin-right:5px;background: rgb(22, 160, 133);color:#fff;" id="my-start" placeholder="选择开始日期" />
+								</div>
+								<div class="am-u-sm-6"  style="text-align: left;padding: 0px;">
+									<input class="am-btn am-btn-default am-margin-right" style="margin: 0px;width:130px;background: rgb(22, 160, 133);color:#fff;"
+										id="my-end" placeholder="选择结束日期" />
+								</div>
+							</div>
+						</div>
+						<br />
+						<div>
+
+							<button type="button" class="am-btn am-btn-default am-btn-success result">开始计算</button>
+						</div>
+				</div>
+				<div class="row am-cf">
+					<div class="row">
+						<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+							<div class="widget am-cf">
+								<div class="widget-head am-cf">
+									<div class="widget-title  am-cf">计算统计</div>
+								</div>
+								<div class="widget-body  am-fr">
+
+									<div class="am-u-sm-12 am-u-md-6 am-u-lg-12">
+
+										<div class="am-form-group">
+											<div class="am-btn-toolbar">
+												<div class="am-btn-group am-btn-group-xs"></div>
+
+											</div>
+										</div>
+
+									</div>
+									<div class="am-u-sm-12">
+										<table width="100%"
+											class="am-table am-table-bordered am-table-radius am-table-striped">
+											<thead>
+												<tr
+													style="font-size: 14px; height: 60px; font-weight: normal; text-align: center;">
+													<th style="text-align: center; line-height: 50px;">银行
+													</th>
+													<th>封闭式保本余额 <br /> 
+													<select class="ly_th" style="font-size: 12px;">
+															<option>选择期号</option>
+													</select>
+													</th>
+													<th>封闭式保本日均 <br /> 
+													<select class="ly_day_th" style="font-size: 12px;">
+														<option>选择期号</option>
+													</select>
+													</th>
+													<th>开放式保本余额  
+													<br/><br/>
+													</th>
+													<th>开放式保本日均
+													<br/><br/>
+													</th>
+													<th>封闭式非保本余额 <br /> 
+													<select  class="xy_th" style="font-size: 12px;">
+														<option>选择期号</option>
+													</select>
+													</th>
+													<th>封闭式非保本日均 <br /> 
+													<select class="xy_day_th" style="font-size: 12px;">
+														<option>选择期号</option>
+													</select>
+													</th>
+													<th>开放式非保本余额
+													<br/><br/>
+													</th>
+													<th>开放式非保本日均
+													<br/><br/>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<#list bankList as bank>
+												<tr class="gradeX even">
+													<td>${bank.name}</td>
+													<td class="ly_count">-</td>
+													<td class="ly_day">-</td>
+													<td class="open_ly_count">-</td>
+													<td class="open_ly_day">-</td>
+													<td class="xy_count">-</td>
+													<td class="xy_day">-</td>
+													<td class="open_xy_count">-</td>
+													<td class="open_xy_day">-</td>
+
+												</tr>
+												</#list>
+												<#if bankList?size==0>
+												<tr class="gradeX even">
+													<td colspan="5" style="text-align: center;">暂无更多数据</td>
+												</tr>
+												</#if>
+												<!-- more data -->
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<@htmlJs>
+	<script>
+		$(function() {
+			$(".data,.tz").click(function() {
+				$("#uploadFileType").val($(this).attr("uploadFileType"));
+				$("#uploadFile").click();
+			});
+
+			$("#uploadFile").change(function() {
+				$("#form").ajaxSubmit(function(result) {
+					$("body").alertModal("系统提示", result.resultDesc,function(){
+						if(!result.result)
+							window.location.reload();
+					});
+				})
+			});
+			
+			$(".result").click(function(){
+				$("input[type='file']").each(function(){
+					if(!$(this).val()){
+						$("body").alertModal("系统提示", "请导入对应数据");
+						return;
+					}
+				});
+				if(!$("#my-start").val()||!$("#my-end").val()){
+					$("body").alertModal("系统提示", "请选择日期在计算");
+					return;
+				}
+			
+				$.post("${ctx}/count/result?startTime="+$("#my-start").val()+"&endTime="+$("#my-end").val(),function(res){
+					if(!res.result)
+						$("body").alertModal("系统提示", res.resultDesc);
+					//封闭式保本
+					var ly_map = res.data.countLyByBank;
+					for(var key in ly_map){
+						var tr = $("td:contains('"+key+"')").parent();
+						$(".ly_count",tr).text(ly_map[key].toFixed(4));
+					}
+					//开放式保本
+					var open_ly_map = res.data.countOpenLyByBank;
+					for(var key in open_ly_map){
+						var tr = $("td:contains('"+key+"')").parent();
+						$(".open_ly_count",tr).text(open_ly_map[key].toFixed(4));
+					}
+					//封闭式非保本
+					var xy_map = res.data.countXyByBank;
+					for(var key in xy_map){
+						var tr = $("td:contains('"+key+"')").parent();
+						$(".xy_count",tr).text(xy_map[key].toFixed(4));
+					}
+					//开放式非保本
+					var open_xy_map = res.data.countOpenXyByBank;
+					for(var key in open_xy_map){
+						var tr = $("td:contains('"+key+"')").parent();
+						$(".open_xy_count",tr).text(open_xy_map[key].toFixed(4));
+					}
+					
+					var xy_day_map = res.data.dayXyCountByBank;
+					for(var key in xy_day_map){
+						var tr = $("td:contains('"+key+"')").parent();
+						$(".xy_day",tr).text(xy_day_map[key].toFixed(4));
+					}
+					var open_xy_day_map = res.data.dayOpenXyCountByBank;
+					for(var key in open_xy_day_map){
+						var tr = $("td:contains('"+key+"')").parent();
+						if(open_xy_day_map[key]==null)
+							continue;
+						$(".open_xy_day",tr).text(open_xy_day_map[key].toFixed(4));
+					}
+					var ly_day_map = res.data.dayLyCountByBank;
+					for(var key in ly_day_map){
+						var tr = $("td:contains('"+key+"')").parent();
+						$(".ly_day",tr).text(ly_day_map[key].toFixed(4));
+					}
+				
+					var open_ly_day_map = res.data.dayOpenLyCountByBank;
+					console.log(open_ly_day_map);
+					for(var key in open_ly_day_map){
+						var tr = $("td:contains('"+key+"')").parent();
+						$(".open_ly_day",tr).text(open_ly_day_map[key].toFixed(4));
+					}
+					
+					var numbersLyStartSet = res.data.numbersLyStartSet;
+					var numbersLyEndSet = res.data.numbersLyEndSet;
+					var numbersXyStartSet = res.data.numbersXyStartSet;
+					var numbersXyEndSet = res.data.numbersXyEndSet;
+					$(".ly_th").html("<option>请选择期号</option>");
+					$(".ly_day_th").html("<option>请选择期号</option>");
+					$(".xy_th").html("<option>请选择期号</option>");
+					$(".xy_day_th").html("<option>请选择期号</option>");
+					$.each(numbersLyStartSet,function(i,v){
+						$.each(numbersLyEndSet,function(j,d){
+							$(".ly_th").append("<option value='"+v+","+d+"'>"+v+"****LY"+d+"</option>");
+							$(".ly_day_th").append("<option value='"+v+","+d+"'>"+v+"****LY"+d+"</option>");
+						});
+					})
+					$.each(numbersXyStartSet,function(i,v){
+						$.each(numbersXyEndSet,function(j,d){
+							$(".xy_th").append("<option value='"+v+","+d+"'>"+v+"****XY"+d+"</option>");
+							$(".xy_day_th").append("<option value='"+v+","+d+"'>"+v+"****XY"+d+"</option>");
+						});
+					})
+					
+					
+					
+					$(".ly_th").change(function(){
+						var _this = $(this);
+						var _val = _this.val();
+						var _start = "";
+						var _end = "";
+						if(_val!="请选择期号"){
+							_start = _val.split(",")[0];
+							_end = _this.val().split(",")[1]
+						}
+						$.post("${ctx}/count/selectResult",{startTime:$("#my-start").val(),endTime:$("#my-end").val(),start:_start,end:_end},function(rres){
+							var ly_map = rres.data.countLyByBank;
+							$(".ly_count").text("-");
+							for(var key in ly_map){
+								var tr = $("td:contains('"+key+"')").parent();
+								$(".ly_count",tr).text(ly_map[key].toFixed(4));
+							}
+						},"json");
+					});
+					
+					
+					$(".xy_th").change(function(){
+						var _this = $(this);
+						var _val = _this.val();
+						var _start = "";
+						var _end = "";
+						if(_val!="请选择期号"){
+							_start = _val.split(",")[0];
+							_end = _this.val().split(",")[1]
+						}
+						$.post("${ctx}/count/selectResult",{startTime:$("#my-start").val(),endTime:$("#my-end").val(),start:_start,end:_end},function(rres){
+							var xy_map = rres.data.countXyByBank;
+							$(".xy_count").text("-");
+							for(var key in xy_map){
+								var tr = $("td:contains('"+key+"')").parent();
+								$(".xy_count",tr).text(xy_map[key].toFixed(4));
+							}
+						},"json");
+					});
+					
+					$(".ly_day_th").change(function(){
+						var _this = $(this);
+						var _val = _this.val();
+						var _start = "";
+						var _end = "";
+						if(_val!="请选择期号"){
+							_start = _val.split(",")[0];
+							_end = _this.val().split(",")[1]
+						}
+						$.post("${ctx}/count/selectResult",{startTime:$("#my-start").val(),endTime:$("#my-end").val(),start:_start,end:_end},function(rres){
+							var day_ly_map = rres.data.dayLyCountByBank;
+							$(".ly_day").text("-");
+							for(var key in day_ly_map){
+								var tr = $("td:contains('"+key+"')").parent();
+								$(".ly_day",tr).text(day_ly_map[key].toFixed(4));
+							}
+						},"json");
+					});
+					
+					$(".xy_day_th").change(function(){
+						var _this = $(this);
+						var _val = _this.val();
+						var _start = "";
+						var _end = "";
+						if(_val!="请选择期号"){
+							_start = _val.split(",")[0];
+							_end = _this.val().split(",")[1]
+						}
+						$.post("${ctx}/count/selectResult",{startTime:$("#my-start").val(),endTime:$("#my-end").val(),start:_start,end:_end},function(rres){
+							var day_xy_map = rres.data.dayXyCountByBank;
+							$(".xy_day").text("-");
+							for(var key in day_xy_map){
+								var tr = $("td:contains('"+key+"')").parent();
+								$(".xy_day",tr).text(day_xy_map[key].toFixed(4));
+							}
+						},"json");
+					});
+					
+				},"json")
+			});
+		});
+		$(function() {
+			var $alert = $('#my-alert');
+			var _start = "${dateMap['start']}";
+			var _end = "${dateMap['end']}";
+			
+			var startDate;
+			var endDate;
+			if(_start && _end){
+				startDate  = new Date(_start.split("-")[0],_start.split("-")[1]-1,_start.split("-")[2]);
+				endDate  = new Date(_end.split("-")[0],_end.split("-")[1]-1,_end.split("-")[2]);
+				$('#my-start').datepicker('setValue', startDate)
+				$('#my-end').datepicker('setValue', endDate)
+			}
+		
+			
+			$('#my-start').datepicker().on(
+					'changeDate.datepicker.amui',
+					function(event) {
+						if (endDate!=null&&event.date.valueOf() > endDate.valueOf()) {
+							$alert.find('p').text('开始日期应小于结束日期！').end().show();
+						} else {
+							$alert.hide();
+							startDate = new Date(event.date);
+							$('#my-startDate').text($('#my-start').data('date'));
+						}
+						$(this).datepicker('close');
+					});
+
+			$('#my-end').datepicker().on('changeDate.datepicker.amui',
+			function(event) {
+				if (startDate!=null&&event.date.valueOf() < startDate.valueOf()) {
+					$alert.find('p').text('结束日期应大于开始日期！').end().show();
+				} else {
+					$alert.hide();
+					endDate = new Date(event.date);
+					$('#my-endDate').text($('#my-end').data('date'));
+				}
+				$(this).datepicker('close');
+			});
+		});
+	</script>
+	</@htmlJs>
+</body>
+
+</html>
